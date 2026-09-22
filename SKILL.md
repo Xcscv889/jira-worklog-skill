@@ -25,7 +25,7 @@ Use the bundled PowerShell helper for Jira Server at `http://jira.bocloud.com.cn
 
 ## Learning log
 
-Read [references/lessons-learned.md](references/lessons-learned.md) when a similar failure, correction, or workflow decision appears. After a meaningful reusable lesson, update it before handoff with the trigger, root cause, durable rule, and evidence. Do not record credentials, customer data, ticket prose, or routine task history; avoid duplicates and replace obsolete rules.
+Read [references/lessons-learned.md](references/lessons-learned.md) when a similar failure, correction, or workflow decision appears. After a meaningful reusable lesson, update it before handoff with the trigger, root cause, durable rule, and evidence. Classify it under the document's fixed categories, merge it into an existing rule when it is the same pattern, and add a category only when no existing category fits. Do not record credentials, customer data, ticket prose, or routine task history; avoid duplicates and replace obsolete rules.
 
 - Draft a concise Chinese resolution report after validation. It must state only the cause and solution; do not include test or verification results in the Jira comment.
 - Only run `scripts/jira.ps1 comment BOINVEST-123 <report>` when the user explicitly says to submit/post the report.
