@@ -14,13 +14,14 @@ Use the bundled PowerShell helper for Jira Server at `http://jira.bocloud.com.cn
 ## Selected-issue workflow
 
 1. Start read-only: trace the complete data flow and execution path, read relevant maintenance docs, and inspect the related source before forming a cause. Do not guess.
-2. Before proposing a fix, produce a feature and logic brief: user and business goal, current and desired behavior, inputs and outputs, state transitions, ownership and module boundaries, invariants, edge cases, reused capabilities, and acceptance criteria. Separate verified facts, reasonable inferences, and open questions.
-3. Use the narrowest reproducible check first. When stable automation is possible, add a failing test before the fix; otherwise explain why and use a minimal reproduction, read-only diagnosis, or targeted temporary logging. Remove temporary debugging code before delivery.
-4. Discuss a complete, executable, low-risk plan before editing. Check existing behavior and modules, including risks not stated in the ticket, so the change does not create logical conflicts.
-5. Prefer upgrading and reusing existing services, state, IPC, UI primitives, and patterns over parallel implementations. Frontend changes must follow the repository UI system, remain polished and accessible, and may include relevant proven product capabilities for the user to consider. Do not use arrow icons for navigation or action controls.
-6. Follow discuss, design, implement, validate. Do not modify code until the user explicitly confirms the plan.
-7. After implementation, review the changed data flow, sibling callers, regressions, and test results. Fix issues found in the same approved scope, then rerun targeted validation.
-8. For complex business logic, cross-module behavior, backend/main-process boundaries, persistence, permissions, or recovery semantics, create or update the relevant `docs/*.md` maintenance documentation with the data flow, boundary, failure recovery, and validation approach.
+2. Verify the ticket still exists in the current source and behavior. Use the relevant test, a minimal reproduction, or source evidence; if it no longer exists, report the evidence and stop without proposing or making a fix.
+3. Before proposing a fix, produce a feature and logic brief: user and business goal, current and desired behavior, inputs and outputs, state transitions, ownership and module boundaries, invariants, edge cases, reused capabilities, and acceptance criteria. Separate verified facts, reasonable inferences, and open questions.
+4. Use the narrowest reproducible check first. When stable automation is possible, add a failing test before the fix; otherwise explain why and use a minimal reproduction, read-only diagnosis, or targeted temporary logging. Remove temporary debugging code before delivery.
+5. Discuss a complete, executable, low-risk plan before editing. Check existing behavior and modules, including risks not stated in the ticket, so the change does not create logical conflicts.
+6. Prefer upgrading and reusing existing services, state, IPC, UI primitives, and patterns over parallel implementations. Frontend changes must follow the repository UI system, remain polished and accessible, and may include relevant proven product capabilities for the user to consider. Do not use arrow icons for navigation or action controls.
+7. Follow discuss, design, implement, validate. Do not modify code until the user explicitly confirms the plan.
+8. After implementation, review the changed data flow, sibling callers, regressions, and test results. Fix issues found in the same approved scope, then rerun targeted validation.
+9. For complex business logic, cross-module behavior, backend/main-process boundaries, persistence, permissions, or recovery semantics, create or update the relevant `docs/*.md` maintenance documentation with the data flow, boundary, failure recovery, and validation approach.
 
 - Draft a concise Chinese resolution report after validation. It must state only the cause and solution; do not include test or verification results in the Jira comment.
 - Only run `scripts/jira.ps1 comment BOINVEST-123 <report>` when the user explicitly says to submit/post the report.
