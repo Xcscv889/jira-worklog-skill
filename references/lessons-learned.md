@@ -9,7 +9,7 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 - Trigger: a selected Jira issue may describe a bug already fixed in the current branch.
 - Root cause: treating ticket text as the current system state leads to duplicate work.
 - Rule: trace the current path and use source, a targeted test, or a minimal reproduction to verify the issue before proposing a fix. Stop with evidence if it is gone.
-- Evidence: BOINVEST-422's dangling related-link cleanup is present in the current source.
+- Evidence: a selected issue's reported cleanup defect was already covered by the current source.
 
 ## Jira workflow safety
 
@@ -18,7 +18,7 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 - Trigger: status and resolution IDs can vary by workflow.
 - Root cause: hard-coded IDs can update the wrong state or fail on another issue type.
 - Rule: inspect the issue's available transitions, preview the unique transition that accepts `Done`, and refuse ambiguous workflows before any mutation.
-- Evidence: BOINVEST-422 exposes a distinct resolve transition and requires a resolution field.
+- Evidence: a Jira issue exposed a distinct resolve transition and required a resolution field.
 
 ## Information presentation
 

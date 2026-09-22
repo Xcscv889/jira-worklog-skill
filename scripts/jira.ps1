@@ -5,10 +5,14 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$baseUrl = 'http://jira.bocloud.com.cn:9991'
-$credentialPath = Join-Path $env:LOCALAPPDATA 'OpenAI\Codex\jira-bocloud.credential.xml'
-if (-not (Test-Path -LiteralPath $credentialPath)) { throw 'JIRA_CREDENTIALS_MISSING' }
+$stateDir = Join-Path $env:LOCALAPPDATA 'OpenAI\Codex'
+$credentialPath = Join-Path $stateDir 'jira-worklog.credential.xml'
+$configPath = Join-Path $stateDir 'jira-worklog.config.json'
+if (-not (Test-Path -LiteralPath $credentialPath) -or -not (Test-Path -LiteralPath $configPath)) { throw 'JIRA_SETUP_REQUIRED' }
 
+$config = Get-Content -Raw -LiteralPath $configPath | ConvertFrom-Json
+$baseUrl = ([string]$config.baseUrl).TrimEnd('/')
+if (-not $baseUrl) { throw 'JIRA_CONFIG_INVALID' }
 $credential = Import-Clixml -LiteralPath $credentialPath
 $pair = '{0}:{1}' -f $credential.UserName, $credential.GetNetworkCredential().Password
 $headers = @{ Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair)); Accept = 'application/json' }
@@ -32,7 +36,7 @@ function Get-DoneResolveCandidate($Transitions) {
 try {
   switch ($Action) {
     'list' {
-      $jql = 'project = BOINVEST AND assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC'
+      $jql = 'assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC'
       $query = [uri]::EscapeDataString($jql)
       Invoke-RestMethod -Uri "$baseUrl/rest/api/2/search?jql=$query&fields=summary,status,priority,updated,description,comment&maxResults=50" -Headers $headers -TimeoutSec 20 |
         ConvertTo-Json -Depth 20

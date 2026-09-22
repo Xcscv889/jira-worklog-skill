@@ -1,14 +1,14 @@
 ---
 name: jira-worklog
-description: Read assigned Jira issues and analyse, resolve, and update Jira reports for the local BOINVEST Jira Server.
+description: Read assigned Jira issues and analyse, resolve, and update Jira reports for a configured Jira Server or Data Center instance.
 ---
 
 # Jira worklog
 
-Use the bundled PowerShell helper for Jira Server at `http://jira.bocloud.com.cn:9991`.
+Use the bundled PowerShell helper. Configure it once with `scripts/jira-auth.ps1 -BaseUrl https://jira.example.com`.
 
-- Read the current user's unresolved BOINVEST issues with `scripts/jira.ps1 list`.
-- Read an issue with `scripts/jira.ps1 get BOINVEST-123` before analysis or edits.
+- Read the current user's unresolved issues with `scripts/jira.ps1 list`.
+- Read an issue with `scripts/jira.ps1 get PROJ-123` before analysis or edits.
 - In lists, show each Jira description verbatim and in full. Retain sections such as prerequisites, reproduction, actual result, expected result, and evidence; do not replace them with a summary.
 
 ## Selected-issue workflow
@@ -21,14 +21,13 @@ Use the bundled PowerShell helper for Jira Server at `http://jira.bocloud.com.cn
 6. Prefer upgrading and reusing existing services, state, IPC, UI primitives, and patterns over parallel implementations. Frontend changes must follow the repository UI system, remain polished and accessible, and may include relevant proven product capabilities for the user to consider. Do not use arrow icons for navigation or action controls.
 7. Follow discuss, design, implement, validate. Do not modify code until the user explicitly confirms the plan.
 8. After implementation, run a QA sweep: review the changed data flow, sibling callers, state variants, regressions, and related Jira tickets for the same subsystem. Fix issues found in the same approved scope, then rerun targeted validation; otherwise surface them separately.
-9. For complex business logic, cross-module behavior, backend/main-process boundaries, persistence, permissions, or recovery semantics, create or update the relevant `docs/*.md` maintenance documentation with the data flow, boundary, failure recovery, and validation approach.
+9. For complex business logic, cross-module behavior, backend/main-process boundaries, persistence, permissions, or recovery semantics, create or update the relevant maintenance documentation with the data flow, boundary, failure recovery, and validation approach.
 
 ## Learning log
 
 Read [references/lessons-learned.md](references/lessons-learned.md) when a similar failure, correction, or workflow decision appears. After a meaningful reusable lesson, update it before handoff with the trigger, root cause, durable rule, and evidence. Classify it under the document's fixed categories, merge it into an existing rule when it is the same pattern, and add a category only when no existing category fits. Do not record credentials, customer data, ticket prose, or routine task history; avoid duplicates and replace obsolete rules.
 
-- Draft a concise Chinese resolution report after validation. It must state only the cause and solution; do not include test or verification results in the Jira comment.
-- Only run `scripts/jira.ps1 comment BOINVEST-123 <report>` when the user explicitly says to submit/post the report.
-- Before any status update, run `scripts/jira.ps1 resolve-preview BOINVEST-123` and show the exact transition, target status, resolution, and concise comment to the user. Do not proceed if the workflow is ambiguous.
-- When the user explicitly confirms that preview, run `scripts/jira.ps1 resolve BOINVEST-123 <report>`. It atomically posts the report and applies the ticket's uniquely available transition that accepts resolution `Done`. Never infer this authorization.
-- If credentials are missing, ask the user to run `scripts/jira-auth.ps1` once. Never ask for or print their password.
+- Draft a concise resolution report after validation. It must state only the cause and solution; do not include test or verification results unless the user asks.
+- Only run `scripts/jira.ps1 comment PROJ-123 <report>` when the user explicitly says to submit/post the report.
+- Before any status update, run `scripts/jira.ps1 resolve-preview PROJ-123` and show the exact transition, target status, resolution, and concise comment to the user. Do not proceed if the workflow is ambiguous.
+- When the user explicitly confirms that preview, run `scripts/jira.ps1 resolve PROJ-123 <report>`. It atomically posts the report and applies the ticket's uniquely available transition that accepts resolution `Done`. Never infer this authorization.
