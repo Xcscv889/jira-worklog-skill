@@ -23,6 +23,10 @@ Use the bundled PowerShell helper for Jira Server at `http://jira.bocloud.com.cn
 8. After implementation, run a QA sweep: review the changed data flow, sibling callers, state variants, regressions, and related Jira tickets for the same subsystem. Fix issues found in the same approved scope, then rerun targeted validation; otherwise surface them separately.
 9. For complex business logic, cross-module behavior, backend/main-process boundaries, persistence, permissions, or recovery semantics, create or update the relevant `docs/*.md` maintenance documentation with the data flow, boundary, failure recovery, and validation approach.
 
+## Learning log
+
+Read [references/lessons-learned.md](references/lessons-learned.md) when a similar failure, correction, or workflow decision appears. After a meaningful reusable lesson, update it before handoff with the trigger, root cause, durable rule, and evidence. Do not record credentials, customer data, ticket prose, or routine task history; avoid duplicates and replace obsolete rules.
+
 - Draft a concise Chinese resolution report after validation. It must state only the cause and solution; do not include test or verification results in the Jira comment.
 - Only run `scripts/jira.ps1 comment BOINVEST-123 <report>` when the user explicitly says to submit/post the report.
 - Before any status update, run `scripts/jira.ps1 resolve-preview BOINVEST-123` and show the exact transition, target status, resolution, and concise comment to the user. Do not proceed if the workflow is ambiguous.
