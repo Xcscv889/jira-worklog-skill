@@ -37,6 +37,9 @@ HTTPS is required by default. Use `-AllowInsecureHttp` only for a trusted legacy
 # Assigned unresolved issues
 powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 list
 
+# Project chooser data: project keys/names and unresolved counts only
+powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 projects
+
 # Filter to one project (replace PROJ with its key)
 powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 list -Project PROJ
 

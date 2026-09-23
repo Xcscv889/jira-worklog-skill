@@ -1,5 +1,5 @@
 param(
-  [Parameter(Mandatory = $true)][ValidateSet('list', 'get', 'comment', 'resolve-preview', 'resolve', 'download-attachment', 'cleanup-attachments')][string]$Action,
+  [Parameter(Mandatory = $true)][ValidateSet('projects', 'list', 'get', 'comment', 'resolve-preview', 'resolve', 'download-attachment', 'cleanup-attachments')][string]$Action,
   [string]$IssueKey,
   [string]$Report,
   [ValidatePattern('^[A-Z][A-Z0-9_]*$')][string]$Project,
@@ -65,6 +65,28 @@ function Get-DoneResolveCandidate($Transitions) {
 
 try {
   switch ($Action) {
+    'projects' {
+      $jql = [uri]::EscapeDataString('assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC')
+      $startAt = 0
+      $pageSize = 100
+      $projectCounts = @{}
+      do {
+        $uri = '{0}/rest/api/2/search?jql={1}&fields=project&startAt={2}&maxResults={3}' -f $baseUrl, $jql, $startAt, $pageSize
+        $page = Invoke-RestMethod -Uri $uri -Headers $headers -TimeoutSec 20
+        foreach ($issue in $page.issues) {
+          $projectInfo = $issue.fields.project
+          if (-not $projectCounts.ContainsKey($projectInfo.key)) {
+            $projectCounts[$projectInfo.key] = [pscustomobject]@{ key = $projectInfo.key; name = $projectInfo.name; unresolvedCount = 0 }
+          }
+          $projectCounts[$projectInfo.key].unresolvedCount++
+        }
+        $startAt += $page.issues.Count
+      } while ($page.issues.Count -gt 0 -and $startAt -lt $page.total)
+      [pscustomobject]@{
+        total = $startAt
+        projects = @($projectCounts.Values | Sort-Object name, key)
+      } | ConvertTo-Json -Depth 5
+    }
     'list' {
       $jql = 'assignee = currentUser() AND resolution = Unresolved'
       if ($Project) { $jql = "project = $Project AND $jql" }

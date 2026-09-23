@@ -12,9 +12,9 @@ $jira = Join-Path $env:USERPROFILE '.codex\skills\jira-worklog\scripts\jira.ps1'
 $auth = Join-Path $env:USERPROFILE '.codex\skills\jira-worklog\scripts\jira-auth.ps1'
 ```
 
-- Read all unresolved issues assigned to the current user with `& $jira list`; filter one project with `& $jira list -Project PROJ` (replace with the Jira project key).
+- When asked to browse assigned issues, first run `& $jira projects`. Show only the available projects and unresolved counts in a compact project chooser, then wait for the user's project selection. Do not fetch or display issue descriptions before selection. If the user explicitly chooses “all”, run `& $jira list`; for one project run `& $jira list -Project PROJ` (replace with the selected Jira project key).
 - Read an issue with `& $jira get PROJ-123` before analysis or edits.
-- In lists, show the project key/name, issue key, summary, attachment count and filenames, and each Jira description verbatim and in full. If there are no attachments, show `None`. Retain sections such as prerequisites, reproduction, actual result, expected result, and evidence; do not replace them with a summary. List attachment metadata only; do not download attachment contents until needed for a selected issue. Do not display status, update time, or priority unless requested.
+- Present selected-project results as readable issue cards grouped under a project heading, not a wide table with long descriptions. Each card shows issue key, summary, attachment count and filenames, and the Jira description verbatim and in full. Preserve description sections, lists, and line breaks; do not replace them with a summary. If there are no attachments, show `None`. List attachment metadata only; do not download attachment contents until needed for a selected issue. Do not display status, update time, or priority unless requested.
 
 ## Issue attachments
 
@@ -43,4 +43,4 @@ Read [references/lessons-learned.md](references/lessons-learned.md) when a simil
 - Only run `& $jira comment PROJ-123 <report>` when the user explicitly says to submit/post the report.
 - Before any status update, run `& $jira resolve-preview PROJ-123` and show the exact transition, target status, resolution, and concise comment to the user. Do not proceed if the workflow is ambiguous.
 - When the user explicitly confirms that preview, run `& $jira resolve PROJ-123 <report>`. It atomically posts the report and applies the ticket's uniquely available transition that accepts resolution `Done`. Never infer this authorization.
-- If the credential file is missing, ask the user to run `& $auth` once. If the file exists but `Import-Clixml` reports a decryption/cryptographic error, treat it as a Windows identity/DPAPI mismatch, not a logged-out account: retry the Jira command in the Windows account environment that created the credential before asking for re-authentication. Never ask for or print their password.
+- If the credential file is missing, ask the user to run `& $auth` once. If it exists but `Import-Clixml` reports decryption failure, treat it as a Windows DPAPI identity mismatch, not a logout. Codex may expose the same profile path while executing as an isolated Windows identity. Check `whoami` and file presence without reading credential contents, then retry the read using the Windows identity execution route that created the credential. Ask for reauthentication only if that retry reports an actual Jira authentication failure. Never ask for or print the password.

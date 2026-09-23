@@ -17,8 +17,8 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 
 - Trigger: a configured Jira query reports `Import-Clixml` cryptographic failure.
 - Root cause: Windows-protected credentials can only be decrypted by the Windows identity that created them; the file may still exist and the Jira account may still be logged in.
-- Rule: distinguish missing credential files from decryption errors. Retry under the creating Windows identity before asking the user to authenticate again. Never expose the credential.
-- Evidence: a configured credential file failed to decrypt in an isolated Codex execution identity; the same query succeeded in the user's Windows environment.
+- Rule: distinguish missing credential files from decryption errors. Codex may see the profile path while running as an isolated Windows identity without the DPAPI key. Check `whoami` and file presence without reading secrets, then retry the read under the identity that created the credential. Do not ask for reauthentication unless that retry reports an actual Jira authentication failure. Never expose the credential.
+- Evidence: Jira `list` failed under an isolated Codex identity and succeeded under the user's Windows identity without changing or recreating the credential.
 
 ### Download and remove Jira attachment copies safely
 
@@ -41,3 +41,9 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 - Trigger: a one-line summary lost prerequisites, reproduction, and evidence needed for diagnosis.
 - Root cause: treating an issue description as a display summary rather than source material.
 - Rule: show the full Jira description verbatim; summaries are a separate field.
+
+### Select a project before loading issue details
+
+- Trigger: a user asks to browse assigned issues across several projects.
+- Root cause: fetching every full description before knowing the desired project creates unnecessary output and makes the list hard to scan.
+- Rule: fetch only project names/keys and unresolved counts first; let the user select a project, then fetch and display that project's issues as readable cards with full descriptions.
