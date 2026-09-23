@@ -37,6 +37,9 @@ HTTPS is required by default. Use `-AllowInsecureHttp` only for a trusted legacy
 # Assigned unresolved issues
 powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 list
 
+# Filter to one project (replace PROJ with its key)
+powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 list -Project PROJ
+
 # One issue
 powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 get PROJ-123
 
@@ -45,6 +48,18 @@ powershell -ExecutionPolicy Bypass -File scripts\jira.ps1 resolve-preview PROJ-1
 ```
 
 `comment` and `resolve` change Jira. They are intended to be called by Codex only after the user explicitly confirms the preview. `resolve` adds the supplied comment and performs the uniquely available transition that accepts resolution `Done`; it refuses ambiguous workflows.
+
+### Issue attachments
+
+The issue list includes attachment counts and filenames. Download only files needed for a selected issue into `.tmp/jira-worklog/<ISSUE-KEY>/`; the helper requires that `.tmp/` is Git-ignored and records downloaded names in a manifest. After investigation and any fix review, run cleanup to remove only those local copies. Jira originals and unlisted files are preserved.
+
+```powershell
+$repoRoot = (git rev-parse --show-toplevel).Trim()
+& scripts\jira.ps1 download-attachment -IssueKey PROJ-123 -AttachmentId 12345 -ProjectRoot $repoRoot
+& scripts\jira.ps1 cleanup-attachments -IssueKey PROJ-123 -ProjectRoot $repoRoot
+```
+
+If `Import-Clixml` reports a decryption error while the credential file exists, rerun under the Windows account that created the credential before authenticating again. Windows DPAPI credentials are identity-bound.
 
 ## Safety model
 

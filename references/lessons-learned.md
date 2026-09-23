@@ -13,6 +13,20 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 
 ## Jira workflow safety
 
+### Distinguish missing credentials from decryption failures
+
+- Trigger: a configured Jira query reports `Import-Clixml` cryptographic failure.
+- Root cause: Windows-protected credentials can only be decrypted by the Windows identity that created them; the file may still exist and the Jira account may still be logged in.
+- Rule: distinguish missing credential files from decryption errors. Retry under the creating Windows identity before asking the user to authenticate again. Never expose the credential.
+- Evidence: a configured credential file failed to decrypt in an isolated Codex execution identity; the same query succeeded in the user's Windows environment.
+
+### Download and remove Jira attachment copies safely
+
+- Trigger: a selected issue includes an attachment needed to inspect or reproduce the defect.
+- Root cause: downloading into ordinary source paths risks accidental commits or deleting unrelated files during cleanup.
+- Rule: download only the required attachment into a Git-ignored, issue-specific temporary directory. Track exact downloaded filenames in a manifest and remove only those copies after investigation; preserve Jira originals and all unlisted files.
+- Evidence: the Jira helper uses `.tmp/jira-worklog/<ISSUE-KEY>/` and a per-issue manifest.
+
 ### Resolve through the ticket's actual workflow
 
 - Trigger: status and resolution IDs can vary by workflow.
