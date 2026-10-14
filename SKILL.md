@@ -5,6 +5,18 @@ description: Read assigned Jira issues and analyse, resolve, and update Jira rep
 
 # Jira worklog
 
+## Bug-ticket root-cause workflow
+
+For a bug or client-error ticket, use this short order before changing Jira or code:
+
+1. Read the full ticket and inspect the current source, version, and execution path. Confirm that the reported behavior still exists.
+2. Reproduce the report with the original entry point, input, model, environment, and operation order. Do not replace an unsuccessful reproduction with a similar message or a nearby ticket.
+3. Search for similar tickets and the same error code, stack signature, module, or call path. Decide whether they share one root cause before fixing them separately.
+4. Fix the confirmed root cause at the owning layer and add a regression check that covers the original trigger and relevant similar cases.
+5. Re-run the original reproduction after the fix, then run the related regression checks. Only after the original scenario is verified as fixed may the ticket be marked resolved.
+
+If the original scenario cannot be reproduced, record the evidence and gap, keep the issue unresolved, and do not claim a specific root cause. Keep this workflow separate from Jira API mechanics: credentials, attachment handling, transition previews, and comments remain governed by the rules below.
+
 Use the bundled PowerShell helper for the configured Jira Server/Data Center. The user-level skill is shared across project workspaces for the same Windows user and Codex profile. Resolve scripts from the skill installation path, not the current project directory:
 
 ```powershell

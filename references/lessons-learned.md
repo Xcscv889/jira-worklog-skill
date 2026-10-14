@@ -10,6 +10,7 @@ Store only reusable, non-sensitive lessons that change future decisions. Classif
 - Root cause: treating ticket text as the current system state leads to duplicate work.
 - Rule: trace the current path and use source, a targeted test, or a minimal reproduction to verify the issue before proposing a fix. Stop with evidence if it is gone.
 - Evidence: a selected issue's reported cleanup defect was already covered by the current source.
+- Rule: after source verification, reproduce the original conditions before naming a root cause. Search the same error code, stack signature, module, call path, and related tickets for one shared cause. After a fix, rerun the original reproduction and the related regression checks before resolving the issue.
 
 ## Jira workflow safety
 

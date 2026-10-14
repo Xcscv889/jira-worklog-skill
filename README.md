@@ -3,10 +3,10 @@
 A small Codex skill for an individual developer's Jira loop:
 
 1. List assigned unresolved issues.
-2. Read the full issue description.
-3. Verify the problem in the current source before planning work.
-4. Discuss a low-risk implementation plan and wait for approval.
-5. Review related code and regressions after the fix.
+2. Read the full issue description and inspect the current source.
+3. Reproduce the reported behavior with its original conditions before naming a cause.
+4. Search similar tickets and shared error paths before choosing a narrow or shared fix.
+5. Fix the confirmed root cause and re-run the original reproduction plus regression checks.
 6. Preview, then update Jira with a concise resolution comment and workflow transition.
 
 It deliberately does not manage boards, sprints, worklogs, or bulk ticket changes.
